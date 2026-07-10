@@ -119,9 +119,11 @@ export function Lister(
   )
 }
 
-export function escapeRegExp(str:string) {
+export function escapeRegExp(str:string, anchor=false) {
   if (!str) return "";
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  let out = str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  if (anchor) return "^"+out+"$";
+  else return out;
 }
 let zIdx = 1;
 type OptionElement = React.ReactElement<OptionProps>;

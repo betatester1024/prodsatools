@@ -132,20 +132,33 @@ export default function Page() {
     let processed = false;
     try {
       setProcessing(true);
-      let firstStrs = (byId("firstItems") as HTMLInputElement).value.replaceAll(" ", "").split(",");
-      let lastStrs = (byId("lastItems") as HTMLInputElement).value.replaceAll(" ", "").split(",");
+      let firstStrs = (byId("firstItems") as HTMLInputElement).value.split(/, */);
+      let lastStrs = (byId("lastItems") as HTMLInputElement).value.split(/, */);
       let firstItms = new Set<Item>(), lastItms = new Set<Item>();
-      for (let st of firstStrs)
+      for (let st of firstStrs) {
+        let matchExact = false;
+        if (st.charAt(0) == "\"") {
+          st = st.replaceAll("\"", "");
+          matchExact = true;
+        }
+        console.log(matchExact, st);
         Item.getMap().forEach(
           (v:Item, _key:string, _map:Map<string, Item>)=>{
-            if (st.length != 0 && v.name.match(new RegExp(escapeRegExp(st), "i")))
+            if (st.length != 0 && v.name.match(new RegExp(escapeRegExp(st, matchExact), "i")))
               firstItms.add(v);
           });
-      for (let st of lastStrs)
+      }
+      for (let st of lastStrs) {
+        let matchExact = false;
+        if (st.charAt(0) == "\"") {
+          st = st.replaceAll("\"", "");
+          matchExact = true;
+        }
         Item.getMap().forEach(
           (v:Item, _key:string, _map:Map<string, Item>)=>{
-            if (st.length != 0 && v.name.match(new RegExp(escapeRegExp(st), "i"))) lastItms.add(v);
+            if (st.length != 0 && v.name.match(new RegExp(escapeRegExp(st, matchExact), "i"))) lastItms.add(v);
           });
+        }
       setFirst(Array.from(firstItms));
       setLast(Array.from(lastItms));
       let tArea2 = byId("inBlueprintR") as HTMLTextAreaElement;
@@ -353,8 +366,8 @@ export default function Page() {
         </Button> 
       </div>
       <div className="flex pt-2 pb-2 gap-2">
-        <Input id="firstItems" defaultValue="block, walkway, ladder, net, starter" placeholder="First items..." ctnClassName="grow" theme={Themes.BLUE}/>
-        <Input id="lastItems" defaultValue="expando, recycler" placeholder="Last items..." ctnClassName="grow" theme={Themes.BLUE}/>
+        <Input id="firstItems" defaultValue="block, walkway, ladder, net, starter" placeholder={"First items // Use \"quotes\" to match exact"} ctnClassName="grow" theme={Themes.BLUE}/>
+        <Input id="lastItems" defaultValue="expando, recycler" placeholder={"Last items // Use \"quotes\" to match exact"} ctnClassName="grow" theme={Themes.BLUE}/>
       </div>
     </form>
     <div className={`${Themes.BLUE.textCls} font-nsm p-2 rounded-md border-[2px]`}>
