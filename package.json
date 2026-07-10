@@ -17,7 +17,7 @@
     "concurrently": "^9.1.2",
     "dsabp-js": "^0.4.11",
     "fs": "^0.0.1-security",
-    "next": "^15.3.2",
+    "next": "15.3.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "use-debounce": "^10.0.4"
